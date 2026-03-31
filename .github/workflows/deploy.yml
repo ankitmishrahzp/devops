@@ -23,5 +23,16 @@ jobs:
       run: docker build -t ankithzp/ankit-app:latest .
 
     - name: Push to Docker Hub
-
       run: docker push ankithzp/ankit-app:latest
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        script: |
+          docker stop $(docker ps -q) || true
+          docker rm $(docker ps -aq) || true
+          docker pull ankithzp/ankit-app:latest
+          docker run -d -p 80:80 ankithzp/ankit-app
