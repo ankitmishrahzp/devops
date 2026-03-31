@@ -23,4 +23,5 @@ jobs:
       run: docker build -t ankithzp/ankit-app:latest .
 
     - name: Push to Docker Hub
+
       run: docker push ankithzp/ankit-app:latest
